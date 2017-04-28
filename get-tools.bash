@@ -15,6 +15,7 @@ SETUP_ENV_FILE=setup-env.bash
 echo export PATH=\$PATH:${NODE_JS_DIR}/${NODE}/bin > ${SETUP_ENV_FILE}
 echo 'echo Node version: `node -v`'  >> ${SETUP_ENV_FILE}
 echo 'echo NPM version: `npm -v`'  >> ${SETUP_ENV_FILE}
+echo 'ng -v'  >> ${SETUP_ENV_FILE}
 
 export PATH=$PATH:${NODE_JS_DIR}/${NODE}/bin
 

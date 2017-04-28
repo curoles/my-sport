@@ -18,6 +18,11 @@ So far only one folder `node_modules/` is ignored.
 Add it to my github.
 [Add exisitng repo to github](https://help.github.com/articles/adding-an-existing-project-to-github-using-the-command-line/)
 
+```
+git remote add origin https://github.com/curoles/my-sport.git
+git push -u origin master
+```
+
 # Apr 26
 
 - install Node.js (see get-tools.bash)
