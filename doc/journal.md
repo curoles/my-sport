@@ -1,3 +1,15 @@
+# Fri Apr 28 17:14:01 PDT 2017
+
+To get sources and run:
+- `mkdir -p <path>/mysport/mysport`
+- `cd <path>/mysport/mysport`
+- `git init`
+- `git remote add origin https://github.com/curoles/my-sport.git`
+- if needed, run `get-tools.bash` and source generated `setup-env.bash`
+- run `ng -v` to make sure it does not show "error"
+- to populate|create directory `node_modules` run `npm install`
+- now you can do `ng serve --open`
+
 # Thu Apr 27 22:43:55 PDT 2017
 
 To insert current date at the top of this journa;:
