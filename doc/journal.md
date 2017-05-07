@@ -1,4 +1,160 @@
+# See if Firebase works, Sun May 7 2017
 
+Following instructions at
+https://medium.com/codingthesmartway-com-blog/angular-2-firebase-introduction-b4f32e844db2
+
+Got errors:
+```
+WARNING in ./src/app/app.component.ts
+25:57-68 "export 'AngularFire' was not found in 'angularfire2'
+
+WARNING in ./src/app/app.component.ts
+25:88-99 "export 'AngularFire' was not found in 'angularfire2'
+
+ERROR in /home/igor/prj/github/mysport/mysport/src/app/app.component.ts (2,10): Module '"/home/igor/prj/github/mysport/mysport/node_modules/angularfire2/index"' has no exported member 'AngularFire'.
+
+ERROR in /home/igor/prj/github/mysport/mysport/src/app/app.component.ts (2,23): Module '"/home/igor/prj/github/mysport/mysport/node_modules/angularfire2/index"' has no exported member 'FirebaseListObservable'.
+
+ERROR in /home/igor/prj/github/mysport/mysport/src/app/app.module.ts (18,37): Cannot find name 'firebaseConfig'.
+```
+
+Reading:
+https://github.com/angular/angularfire2/blob/master/docs/version-4-upgrade.md
+
+Compiles without errors, but I can't see items from the DB.
+
+Trying latest Angular 4
+```
+npm install @angular/{common,compiler,compiler-cli,core,forms,http,platform-browser,platform-browser-dynamic,platform-server,router,animations}@latest typescript@latest --save
+```
+
+for future:
+http://stackoverflow.com/questions/38309758/get-user-auth-profile-info-in-firebase-using-angular2
+
+Here are my changes, still can't work with Firebase
+```
+ git diff tsconfig.json src/app/app.module.ts src/app/app.component.ts src/app/app.component.html | cat
+diff --git a/src/app/app.component.html b/src/app/app.component.html
+index dbdf5d1..835babe 100644
+--- a/src/app/app.component.html
++++ b/src/app/app.component.html
+@@ -1,6 +1,23 @@
+ <h1>
+   {{title}}
+ </h1>
++
+  <div class="w3-container w3-teal">
+   <h1>{{title}}</h1>
+-</div> 
++ </div>
++
++<div>test firebase
++<ul>
++<p>user={{user.$value}}</p>
++<p>fitness={{exercises.fitness.pull-up.$value}}</p>
++  <li class="text" *ngFor="let exercise of exercises | async">
++    {{exercise.$value}}
++  </li>
++</ul>
++</div>
++
++test2
++<!--div> {{ (exercises | async)? | json }} </div-->
++<!--div> {{ (user | async)? | json }} </div-->
++<button (click)="login()">Login</button>
++<button (click)="logout()">Logout</button>
+diff --git a/src/app/app.component.ts b/src/app/app.component.ts
+index 48b015f..1265293 100644
+--- a/src/app/app.component.ts
++++ b/src/app/app.component.ts
+@@ -1,5 +1,14 @@
+ import { Component } from '@angular/core';
+ 
++import { Observable } from 'rxjs/Observable';
++
++import { AngularFireModule } from 'angularfire2';
++import { AngularFireDatabaseModule, AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
++import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
++
++// Do not import from 'firebase' as you'd lose the tree shaking benefits
++import * as firebase from 'firebase/app';
++
+ @Component({
+   selector: 'app-root',
+   templateUrl: './app.component.html',
+@@ -7,4 +16,21 @@ import { Component } from '@angular/core';
+ })
+ export class AppComponent {
+   title = 'MySport';
++  user: Observable<firebase.User>;
++  exercises: FirebaseListObservable<any[]>;
++
++  constructor(
++    private afAuth: AngularFireAuth,
++    private db: AngularFireDatabase
++  ) {
++    this.user = afAuth.authState;
++    this.exercises = db.list('exercises');
++  }
++
++  login() {
++    this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
++  }
++  logout() {
++     this.afAuth.auth.signOut();
++  }
+ }
+diff --git a/src/app/app.module.ts b/src/app/app.module.ts
+index 67ae491..6970616 100644
+--- a/src/app/app.module.ts
++++ b/src/app/app.module.ts
+@@ -3,6 +3,17 @@ import { NgModule } from '@angular/core';
+ import { FormsModule } from '@angular/forms';
+ import { HttpModule } from '@angular/http';
+ 
++import { AngularFireModule } from 'angularfire2';
++import { AngularFireDatabaseModule, AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
++import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth';
++
++//import { environment } from '../environments/environment';
++import { firebaseConfig } from '../environments/firebase.config';
++
++// Do not import from 'firebase' as you'd lose the tree shaking benefits
++//import * as firebase from 'firebase/app';
++
++
+ import { AppComponent } from './app.component';
+ 
+ @NgModule({
+@@ -12,7 +23,11 @@ import { AppComponent } from './app.component';
+   imports: [
+     BrowserModule,
+     FormsModule,
+-    HttpModule
++    HttpModule,
++    AngularFireModule.initializeApp(firebaseConfig),
++    //AngularFireModule.initializeApp(environment.firebase, 'my-app'),
++    AngularFireDatabaseModule,
++    AngularFireAuthModule
+   ],
+   providers: [],
+   bootstrap: [AppComponent]
+diff --git a/tsconfig.json b/tsconfig.json
+index a35a8ee..30cc247 100644
+--- a/tsconfig.json
++++ b/tsconfig.json
+@@ -15,6 +15,9 @@
+     "lib": [
+       "es2016",
+       "dom"
++    ],
++    "types": [
++      "firebase"
+     ]
+   }
+ }
+
+```
 
 # Setting Up Firebase, Sun May 7 2017
 
@@ -10,6 +166,45 @@ create an account and login to the Firebase console.
 - created new App called "MySport"
 - on left panel see "Database", https://console.firebase.google.com/project/mysport-f3dab/database/data
 - created simple test items `exercises>fitness>pull-up`, https://console.firebase.google.com/project/mysport-f3dab/database/data/exercises/fitness/pull-up
+
+## Firebase Configuration
+
+The Firebase configuration consists for four key-value pairs.
+- apiKey
+- authDomain
+- databaseURL
+- storageBucket
+
+The easiest way to get all four pieces of configuration information is to go to the Firebase console,
+open the project view and use the Link _Add Firebase to your web app_.
+From the pop up which is opened you can copy a code snipped containing
+the configuration settings for your specific Firebase project.
+
+```
+<script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAlcubwURXTZcjIAjcPP3IS1JO8i587YiE",
+    authDomain: "mysport-f3dab.firebaseapp.com",
+    databaseURL: "https://mysport-f3dab.firebaseio.com",
+    projectId: "mysport-f3dab",
+    storageBucket: "mysport-f3dab.appspot.com",
+    messagingSenderId: "450011041877"
+  };
+  firebase.initializeApp(config);
+</script>
+```
+Take the settings and paste it into a new file src/environments/firebase.config.ts in the following form:
+
+```
+export const firebaseConfig = {
+  apiKey: 'AIzaSyAlcubwURXTZcjIAjcPP3IS1JO8i587YiE',
+  authDomain: 'mysport-f3dab.firebaseapp.com',
+  databaseURL: 'https://mysport-f3dab.firebaseio.com',
+  storageBucket: 'mysport-f3dab.appspot.com'
+};
+```
 
 ## Installing Firebase and AngularFire 2
 

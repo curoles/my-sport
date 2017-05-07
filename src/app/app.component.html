@@ -1,6 +1,23 @@
 <h1>
   {{title}}
 </h1>
+
  <div class="w3-container w3-teal">
   <h1>{{title}}</h1>
-</div> 
+ </div>
+
+<div>test firebase
+<ul>
+<p>user={{user.$value}}</p>
+<p>fitness={{exercises.fitness.pull-up.$value}}</p>
+  <li class="text" *ngFor="let exercise of exercises | async">
+    {{exercise.$value}}
+  </li>
+</ul>
+</div>
+
+test2
+<!--div> {{ (exercises | async)? | json }} </div-->
+<!--div> {{ (user | async)? | json }} </div-->
+<button (click)="login()">Login</button>
+<button (click)="logout()">Logout</button>
