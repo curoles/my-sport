@@ -1,3 +1,17 @@
+# Bring-up Firebase, Sun May 7
+
+Added Google as auth provider at
+https://console.firebase.google.com/project/mysport-f3dab/authentication/providers
+and Login button started to work.
+
+The crap WAS working, just whatever I made in Firebase Console was not displayable;
+`{{<var>.$value}}` does not show anything if var is map.
+
+Seems like all bloggers use following as the source of info about Angular+Firebase:
+https://github.com/angular/angularfire2/blob/master/docs
+
+Ok, it all somehow works now.
+
 # See if Firebase works, Sun May 7 2017
 
 Following instructions at

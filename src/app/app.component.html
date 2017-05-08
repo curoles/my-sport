@@ -6,18 +6,37 @@
   <h1>{{title}}</h1>
  </div>
 
-<div>test firebase
+<div><p>test firebase {{title}}</p>
+<!--p>user={{user.$value}}</p>
+<p>fitness={{exercises[fitness].$value}}</p-->
 <ul>
-<p>user={{user.$value}}</p>
-<p>fitness={{exercises.fitness.pull-up.$value}}</p>
   <li class="text" *ngFor="let exercise of exercises | async">
-    {{exercise.$value}}
+    {{exercise.$key + ":" + exercise.$value}}
   </li>
 </ul>
 </div>
 
-test2
-<!--div> {{ (exercises | async)? | json }} </div-->
-<!--div> {{ (user | async)? | json }} </div-->
+<div>
+test 4
+    <!--h4>{{ (testItem | async)?.name }}</h4-->
+    <p>{{(testitem | async |json)}}</p>
+    <p>{{(testitem | async)?.$value}}</p>
+<h1>title= {{ title }}</h1>
+end test 4
+</div>
+
+<p>test2</p>
+<div> {{ (exercises | async | json) }} </div>
+<div> {{ (user | async).displayName }} </div>
 <button (click)="login()">Login</button>
 <button (click)="logout()">Logout</button>
+
+<ul><h3>test 3</h3>
+  <li class="text" *ngFor="let item of items | async">
+    {{item.$key + ":" + item.$value}}
+<p>{{ item | json }}</p>
+  </li>
+</ul>
+
+
+
