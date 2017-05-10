@@ -26,16 +26,38 @@ export class AppComponent {
     private afAuth: AngularFireAuth,
     private db: AngularFireDatabase
   ) {
+    console.log("constructing App");
     this.user = afAuth.authState;
-    this.exercises = db.list('/exercises');
-    this.items = db.list('/items');
-    this.testitem = db.object('/testitem');
+    //this.exercises = db.list('/exercises');
+    //this.items = db.list('/items');
+    //this.testitem = db.object('/testitem');
+
+    afAuth.auth.onAuthStateChanged( (authChange: any) => {
+      this.onUserLogInOut(authChange);
+    });
   }
 
   login() {
     this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    console.log("user login ",this.afAuth.auth.currentUser);
   }
+
   logout() {
      this.afAuth.auth.signOut();
+  }
+
+  // https://firebase.google.com/docs/auth/web/manage-users
+  // https://firebase.google.com/docs/reference/js/firebase.auth.Auth
+  onUserLogInOut(authChange: any) {
+    console.log("auth state changed ", JSON.stringify(authChange));
+
+    if (this.afAuth.auth.currentUser) {
+      var currentUser = this.afAuth.auth.currentUser;
+      console.log(`user ${currentUser.displayName} logged in`);
+    }
+    else {
+      console.log("user logged out");
+    }
+
   }
 }
