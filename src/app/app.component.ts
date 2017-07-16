@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from "@angular/router";
 
 import { Observable } from 'rxjs/Observable';
 
@@ -23,6 +24,7 @@ export class AppComponent {
   testitem: FirebaseObjectObservable<any>;
 
   constructor(
+    private router: Router,
     private afAuth: AngularFireAuth,
     private db: AngularFireDatabase
   ) {
@@ -54,6 +56,7 @@ export class AppComponent {
     if (this.afAuth.auth.currentUser) {
       var currentUser = this.afAuth.auth.currentUser;
       console.log(`user ${currentUser.displayName} logged in`);
+      this.router.navigate(['user-page']);
     }
     else {
       console.log("user logged out");
