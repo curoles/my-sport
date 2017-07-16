@@ -1,0 +1,9 @@
+{ "pullup": {
+
+    "name": "Pull up on a bar",
+
+    "metric": [
+        "repetitions",
+        "time"
+    ]
+}}

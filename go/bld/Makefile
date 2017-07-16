@@ -33,6 +33,7 @@ $(INSTALL_DIR):
 install: $(INSTALL_DIR) $(OBJ_DIR)/exr
 	cp $(OBJ_DIR)/exr $(INSTALL_DIR)/.
 	cp -r $(SRC_DIR)/html_templates $(INSTALL_DIR)/.
+	cp -r $(SRC_DIR)/exercise $(INSTALL_DIR)/.
 
 .PHONY: clean
 clean:
