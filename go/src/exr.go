@@ -8,13 +8,23 @@ import (
     "os"
     "path"
     "fmt"
+    "strings"
     "html/template"
     "net/http"
+    "io/ioutil"
+    "encoding/json"
 )
 
-type Page struct {
-    Title   string
-    Content string
+type Exercise struct {
+    Name        string `json:"name"`
+    Title       string `json:"title"`
+    Repetitions bool   `json:"repetitions"`
+    Time        bool   `json:"time"`
+}
+
+type ExercisePage struct {
+    *Exercise
+    //Content string
 }
 
 func getPathToTemplate() string {
@@ -41,16 +51,55 @@ func init() {
     fmt.Println("Initializing...")
 }
 
+func getExerciseStruct(jsonFileName string) (*Exercise,bool) {
+
+    if _, err := os.Stat(jsonFileName); os.IsNotExist(err) {
+        fmt.Println("Not found: ", jsonFileName)
+        return nil,false
+    }
+
+    file, err := ioutil.ReadFile(jsonFileName)
+    if err != nil {
+        fmt.Printf("File error: %v\n", err)
+        return nil, false
+    }
+
+    //fmt.Println("File: ", file)
+
+    var exercise Exercise
+    unmarshErr := json.Unmarshal(file, &exercise)
+    if unmarshErr != nil {
+        fmt.Println("JSON unmarshaling error: ", unmarshErr)
+        return nil, false
+    }
+
+
+    return &exercise, true
+}
+
 func displayPage(
     writer   http.ResponseWriter,
     request *http.Request) {
 
     fmt.Println("Request: ", request.URL)
 
-    page := &Page {
-        Title: "exercise",
-        Content: "content todo",
+    reqURLStr := strings.TrimPrefix(request.URL.String(), "/display")
+
+    jsonFileName := path.Join(getPathToExercises(),reqURLStr+".json")
+
+
+    exercise, ok := getExerciseStruct(jsonFileName)
+    if ok != true {
+        http.NotFound(writer, request)
+        return
     }
+
+    fmt.Println("Exercise: ", exercise)
+
+    page := &ExercisePage { exercise }
+    /*    Title: "exercise",
+        Content: "content todo",
+    }*/
 
     templateInstance.Execute(writer, page)
 }

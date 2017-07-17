@@ -1,9 +1,6 @@
-{ "pullup": {
-
-    "name": "Pull up on a bar",
-
-    "metric": [
-        "repetitions",
-        "time"
-    ]
-}}
+{
+    "name": "pullup",
+    "title": "Pull up on a bar",
+    "repetitions": true,
+    "time": true
+}
