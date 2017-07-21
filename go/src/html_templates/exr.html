@@ -7,5 +7,15 @@
 
     <body>
         <h1>{{.Exercise.Title}}</h1>
+        <ul>Characteristics:
+            <li>time={{.Exercise.Time}}</li>
+            <li>repetitions={{.Exercise.Repetitions}}</li>
+        </ul>
+
+        {{if .Exercise.Link}}
+        <ul>Links:
+            {{range .Exercise.Link}} <li><a href="{{.}}">{{.}}</li> {{end}}
+        </ul>
+        {{end}}
     </body>
 </html>

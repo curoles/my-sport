@@ -1,6 +1,7 @@
 {
-    "name": "pullup",
-    "title": "Pull up on a bar",
+    "name": "pull-up",
+    "title": "Pull-up on a bar",
     "repetitions": true,
-    "time": true
+    "time": true,
+    "link": ["https://en.wikipedia.org/wiki/Pull-up_(exercise)"]
 }

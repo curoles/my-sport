@@ -16,10 +16,11 @@ import (
 )
 
 type Exercise struct {
-    Name        string `json:"name"`
-    Title       string `json:"title"`
-    Repetitions bool   `json:"repetitions"`
-    Time        bool   `json:"time"`
+    Name        string   `json:"name"`
+    Title       string   `json:"title"`
+    Repetitions bool     `json:"repetitions"`
+    Time        bool     `json:"time"`
+    Link        []string `json:"link"`
 }
 
 type ExercisePage struct {
